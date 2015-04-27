@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = 
+CFLAGS =
 LIBS = -lbl
 
 all: pootis
@@ -8,7 +8,7 @@ test: CFLAGS += -DARENATEST -g
 test: pootis
 
 pootis: pootis.o
-	$(CC) -o $@ $@.o
+	$(CC) -o ../arena/$@ $@.o
 
 %.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)
@@ -16,7 +16,7 @@ pootis: pootis.o
 .PHONY: clean
 
 clean:
-	rm -f *.o pootis
+	rm -f *.o ../arena/pootis
 
 tidy:
 	rm -f *.o
