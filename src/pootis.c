@@ -2,6 +2,7 @@
 #include <sys/resource.h>
 
 int main() {
-  //setpriority(PRIO_PROCESS, 0, -20);
-  return 1;
+  setpriority(PRIO_PROCESS, 0, -20);
+  //while(1);
+  //return 1;
 }
