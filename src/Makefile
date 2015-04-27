@@ -1,14 +1,22 @@
 CC = gcc
+CFLAGS = 
 LIBS = -lbl
 
 all: pootis
 
-pootis : pootis.o
+test: CFLAGS += -DARENATEST -g
+test: pootis
+
+pootis: pootis.o
 	$(CC) -o $@ $@.o
 
 %.o: %.c
-	@echo 'Building $@ from $<'
-	$(CC) -o $@ -c -I. $<
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+.PHONY: clean
 
 clean:
 	rm -f *.o pootis
+
+tidy:
+	rm -f *.o
