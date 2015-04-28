@@ -7,11 +7,11 @@ all: pootis arenafiles
 pootis:
 	$(MAKE) -C ./src
 
-arenafiles: 
+arenafiles:
 	$(MAKE) -C ./arena_src
 
 clean:
-	cd ./src && $(MAKE) clean && cd ../arena_src && $(MAKE) clean
+	mkdir ./arena && cd ./src && $(MAKE) clean && cd ../arena_src && $(MAKE) clean
 
 tidy:
 	cd ./src && $(MAKE) tidy && cd ../arena_src && $(MAKE) tidy
