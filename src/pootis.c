@@ -4,9 +4,11 @@
 #include <unistd.h>
 #include <signal.h>
 #include <pthread.h>
+#include <string.h>
+#include <malloc.h>
 
 
-int main(int argc,char* argv) {
+int main(int argc,char** argv) {
  /******************************************
  |       This area is to set up arena conditions       |
  |        It:                                                                                     |
@@ -49,15 +51,28 @@ printf("Current priority is %d\nSetting arena priority to 19\n", prioarena);
  int pid = getpid();
  int cpid = fork();
  if(cpid == 0) {
-  execvp(argv[0], argv);
-  exit();
+  char** temp;
+  int len = strlen(argv[0]);
+  temp[0] = (char*)malloc(1+len);
+  int i;
+  for(i=0; i<len; i++)
+   temp[0][i] = argv[0][i];
+  temp[1] = NULL;
+  temp[0][len] = 0;
+  execvp(temp[0], temp);
  }
- int max = argv[1]*argv[2]*2 + parentPID;
+ else
+ {
+ int max = 200 + parentPID;
  int i;
+ while(1){
  for(i=parentPID; i < max; i++) {
 	pid = getpid();
+        setpgid(cpid, pid);
         if(i != pid)
 		kill(i, SIGKILL);
  }
+}
+}
 
 }
