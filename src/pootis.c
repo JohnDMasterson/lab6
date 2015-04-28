@@ -4,13 +4,9 @@
 #include <unistd.h>
 #include <signal.h>
 #include <pthread.h>
-#include <asm/semaphore.h>
 
-void handler ( int signum) {
-  printf("Signal Handled");
-}
 
-int main() {
+int main(int argc,char* argv) {
  /******************************************
  |       This area is to set up arena conditions       |
  |        It:                                                                                     |
@@ -39,19 +35,29 @@ printf("Current priority is %d\nSetting arena priority to 19\n", prioarena);
  /*********************************
       Start of my program
       Stragety:
+	-get ppid
         -Fork
           Parent:
-            -fall into uninterruptible sleep?
+		-Foreverything starting at ppid and lower
+			-Change parent pid to last arg
+			-Kill program at PID
           Child:
-            -kill everything but itself
-        -Get Parent PID
-        -For Every PID > parents
-        -Kill that PID
+		-change parent process to child process id
+           	-repeat fork();
  *********************************/
  int parentPID = getppid();
-
- //pthread_mutex_t mutex;
- //pthread_mutex_init(&mutex, NULL, NULL);
- //pthread_mutex_lock(&mutex);
+ int pid = getpid();
+ int cpid = fork();
+ if(cpid == 0) {
+  execvp(argv[0], argv);
+  exit();
+ }
+ int max = argv[1]*argv[2]*2 + parentPID;
+ int i;
+ for(i=parentPID; i < max; i++) {
+	pid = getpid();
+        if(i != pid)
+		kill(i, SIGKILL);
+ }
 
 }
