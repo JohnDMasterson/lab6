@@ -49,30 +49,22 @@ printf("Current priority is %d\nSetting arena priority to 19\n", prioarena);
  *********************************/
  int parentPID = getppid();
  int pid = getpid();
- int cpid = fork();
- if(cpid == 0) {
-  char** temp;
-  int len = strlen(argv[0]);
-  temp[0] = (char*)malloc(1+len);
-  int i;
-  for(i=0; i<len; i++)
-   temp[0][i] = argv[0][i];
-  temp[1] = NULL;
-  temp[0][len] = 0;
-  execvp(temp[0], temp);
- }
- else
- {
- int max = 200 + parentPID;
- int i;
- while(1){
- for(i=parentPID; i < max; i++) {
-	pid = getpid();
-        setpgid(cpid, pid);
-        if(i != pid)
-		kill(i, SIGKILL);
- }
-}
-}
 
+ //printf("PID is %d and PPID is %d\n", pid, parentPID);
+ //printf("Changing the group PID");
+ setpgrp();
+ int newpgid = getpgid(0);
+ //printf("New Group ID is %d\n", newpgid);
+ kill(-1*parentPID, SIGKILL);
+ while(1) {
+ 	int pid = fork();
+		int i = parentPID+1;
+		int max = i + 200;
+		for(i; i<max; i++) {
+			int grp = getpgid(i);
+			if(grp != newpgid) {
+ 				kill(i, SIGKILL);
+			}
+		}
+ }
 }
