@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <signal.h>
 
+#define PIDOFFSET 400
+
 
 int main(int argc,char** argv) {
   //get the parents PID
@@ -19,7 +21,7 @@ int main(int argc,char** argv) {
   while(1) {
  	  int pid = fork();
 		int i = parentPID+1;
-		int max = i + 200;
+		int max = i + PIDOFFSET;
 		for(i; i<max; i++) {
 		    int grp = getpgid(i);
 		    if(grp != newpgid) {
